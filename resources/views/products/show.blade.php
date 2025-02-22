@@ -23,6 +23,11 @@
         </div>
     </div>
 
+    <form action="{{ route('buy_now', $product->id) }}" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-success mt-3">Buy Now for ${{ $product->reserve_price }}</button>
+    </form>
+
     <a href="{{ route('products.index') }}" class="btn btn-primary mt-3">Back to Products</a>
 </div>
 @endsection

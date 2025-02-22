@@ -28,3 +28,6 @@ Route::post('login', [AuthController::class, 'login']);
 Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [AuthController::class, 'register']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/bids', [BidController::class, 'store'])->middleware('auth')->name('bids.store');
+Route::resource('auctions', AuctionController::class)->middleware('auth');
+Route::post('/buy-now/{product}', [BuyNowController::class, 'buyNow'])->middleware('auth')->name('buy_now');
