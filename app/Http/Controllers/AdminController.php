@@ -1,7 +1,8 @@
 <?php
 use Illuminate\Http\Request;
-use App\Models\AdminSetting;
+use App\Models\AdminSetting; // Ensure this class exists in the specified namespace
 use App\Models\User;
+use App\Notifications\AccountBanNotification; // Add this line to import the class
 
 class AdminController extends Controller {
     public function updateSettings(Request $request) {
