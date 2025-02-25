@@ -6,16 +6,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Profile;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile.
      */
-    public function show()
+    public function show($id)
     {
-        $user = Auth::user();
-        return view('profile.show', compact('user'));
+        $profile = Profile::with('user')->find($id);
+
+        if (!$profile) {
+            return redirect()->back()->with('error', 'Profile not found.');
+        }
+
+        return view('profile.show', compact('profile'));
     }
 
     /**
@@ -55,6 +61,6 @@ class ProfileController extends Controller
         $user->contact_number = $request->contact_number;
         $user->save();
 
-        return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile.show', $user->id)->with('success', 'Profile updated successfully.');
     }
 }
