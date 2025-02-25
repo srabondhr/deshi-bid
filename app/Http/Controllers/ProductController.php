@@ -30,19 +30,25 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'category' => 'required',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'required|string|max:255',
             'starting_price' => 'required|numeric',
-            'reserve_price' => 'nullable|numeric',
-            'images' => 'nullable|json',
-            'status' => 'required|in:active,sold',
+            'reserve_price' => 'required|numeric',
+            'status' => 'required|string|max:255',
         ]);
 
-        Product::create($request->all());
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->category = $request->category;
+        $product->starting_price = $request->starting_price;
+        $product->reserve_price = $request->reserve_price;
+        $product->status = $request->status;
+        $product->user_id = auth()->id(); // Set the user_id field
+        $product->save();
 
-        return redirect()->route('products.index')
-                         ->with('success', 'Product created successfully.');
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     /**

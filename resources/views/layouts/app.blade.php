@@ -31,7 +31,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
                     @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('profile.show', auth()->id()) }}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('profile.view', Auth::user()->id) }}">Profile</a></li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

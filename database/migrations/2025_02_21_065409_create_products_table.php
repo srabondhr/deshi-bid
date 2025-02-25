@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('user_id'); // Add the user_id field
             $table->string('name');
             $table->text('description');
             $table->string('category');
-            $table->decimal('starting_price', 10, 2);
-            $table->decimal('reserve_price', 10, 2);
-            $table->json('images');
-            $table->enum('status', ['active', 'sold'])->default('active');
+            $table->decimal('starting_price', 8, 2);
+            $table->decimal('reserve_price', 8, 2);
+            $table->string('status');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Add foreign key constraint
         });
     }
 

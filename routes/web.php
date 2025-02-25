@@ -39,7 +39,6 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::resource('products', ProductController::class);
-Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 Route::post('/bids', [BidController::class, 'store'])->middleware('auth')->name('bids.store');
@@ -48,3 +47,11 @@ Route::post('/buy-now/{product}', [BuyNowController::class, 'buyNow'])->middlewa
 Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
 Route::post('/admin/settings', [AdminController::class, 'updateSettings'])->middleware('auth');
 Route::post('/admin/ban/{id}', [AdminController::class, 'banUser'])->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
+});
+
+Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');

@@ -21,20 +21,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['buyer', 'seller', 'admin'])->default('buyer');
-            $table->string('profile_picture')->nullable();
-            $table->string('contact_number')->nullable();
-        });
-    }
+            }
 
     public function down(): void {
         Schema::dropIfExists('users');
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
-            $table->dropColumn('profile_picture');
-            $table->dropColumn('contact_number');
-        });
+        
     }
 };
