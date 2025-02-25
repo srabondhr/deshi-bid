@@ -1,0 +1,12 @@
+.banner {
+    background-color: #007bff;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+.card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+}
