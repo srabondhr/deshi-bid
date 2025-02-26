@@ -1,0 +1,11 @@
+.navbar {
+    height: 50px;
+}
+
+.navbar-brand img {
+    height: 100px;
+    width: auto; /* Maintain aspect ratio */
+    position: absolute;
+    top: 60%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for exact centering */
+}
