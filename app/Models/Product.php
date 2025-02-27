@@ -15,7 +15,7 @@ class Product extends Model
         'description',
         'category',
         'starting_price',
-        'reserve_price',
+      
         'images',
         'status',
     ];

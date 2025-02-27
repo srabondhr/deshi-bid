@@ -33,13 +33,8 @@
         </div>
 
         <div class="form-group">
-            <label for="starting_price">Starting Price</label>
-            <input type="number" step="0.01" class="form-control" id="starting_price" name="starting_price" value="{{ old('starting_price') }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="reserve_price">Reserve Price</label>
-            <input type="number" step="0.01" class="form-control" id="reserve_price" name="reserve_price" value="{{ old('reserve_price') }}">
+            <label for="starting_price">Starting Price (BDT)</label>
+            <input type="text" class="form-control" id="starting_price" name="starting_price" value="{{ old('starting_price') }}" required>
         </div>
 
         <div class="form-group">

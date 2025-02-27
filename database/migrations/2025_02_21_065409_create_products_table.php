@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('category');
-            $table->decimal('starting_price', 8, 2);
-            $table->decimal('reserve_price', 8, 2);
+            $table->decimal('starting_price', 20, 2); // Increase precision and scale
             $table->string('status');
             $table->timestamps();
 

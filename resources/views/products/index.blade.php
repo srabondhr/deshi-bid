@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $product->name }}</h5>
                         <p class="card-text">{{ $product->description }}</p>
-                        <p><strong>Starting Price:</strong> ${{ $product->starting_price }}</p>
+                        <p><strong>Starting Price:</strong> BDT {{ $product->starting_price }}</p>
                         <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary">View Auction</a>
                     </div>
                 </div>
