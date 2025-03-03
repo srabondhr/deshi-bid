@@ -6,7 +6,7 @@
 
     <!-- Banner Section -->
     <div class="banner text-center my-4">
-        <h2>Find the Best Deals on Auctions!</h2>
+        <h2>Find the Best Deals on Auctions!!</h2>
         <a href="{{ route('auctions.index') }}" class="btn btn-primary">View Auctions</a>
     </div>
 
