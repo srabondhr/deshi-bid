@@ -22,7 +22,8 @@ class AuctionController extends Controller {
     }
 
     /**
-     * Store a newly created auction in storage.
+     * Store a newly created auction in storage.php artisan route:list
+
      */
     public function store(Request $request) {
         $request->validate([
@@ -35,5 +36,13 @@ class AuctionController extends Controller {
         Auction::create($request->all());
 
         return redirect()->route('auctions.index')->with('success', 'Auction created successfully!');
+    }
+
+    /**
+     * Display the specified auction.
+     */
+    public function show($id) {
+        $auction = Auction::with('bids')->findOrFail($id);
+        return view('auctions.show', compact('auction'));
     }
 }
