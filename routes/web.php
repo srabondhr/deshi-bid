@@ -43,14 +43,17 @@ Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store
 
 Route::post('/bids', [BidController::class, 'store'])->middleware('auth')->name('bids.store');
 Route::resource('auctions', AuctionController::class)->middleware('auth');
-
-Route::get('/auctions', [AuctionController::class, 'index'])->name('auctions.index');
-Route::get('/auctions/{id}', [AuctionController::class, 'show'])->name('auctions.show');
+#bidding part
+Route::get('/auctions/create', [AuctionController::class, 'create'])->name('auctions.create');
+Route::get('/auctions/view/{id}', [AuctionController::class, 'show'])->name('auctions.index');
+#bidding part by abhi
+Route::get('/bids/{product_id}', [BidController::class, 'bid'])->name('bids.create');
+Route::post('/bids/store', [BidController::class, 'store'])->name('bids.store');
 
 Route::post('/buy-now/{product}', [BuyNowController::class, 'buyNow'])->middleware('auth')->name('buy_now');
 Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
-Route::post('/admin/settings', [AdminController::class, 'updateSettings'])->middleware('auth');
-Route::post('/admin/ban/{id}', [AdminController::class, 'banUser'])->middleware('auth');
+Route::put('/admin/settings', [AdminController::class, 'updateSettings'])->middleware('auth');
+Route::delete('/admin/ban/{id}', [AdminController::class, 'banUser'])->middleware('auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
