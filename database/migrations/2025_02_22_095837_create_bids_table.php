@@ -16,8 +16,8 @@ class CreateBidsTable extends Migration
         if (!Schema::hasTable('bids')) {
             Schema::create('bids', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('product_id')->constrained()->onDelete('cascade');
-                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->foreignId('auction_id')->constrained()->onDelete('cascade'); // Foreign key to auctions table
+                $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
                 $table->decimal('bid_amount', 10, 2);
                 $table->timestamps();
             });

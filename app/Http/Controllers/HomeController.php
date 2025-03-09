@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Auction; // Make sure to import your Auction model
 
 class HomeController extends Controller
 {
@@ -25,6 +26,8 @@ class HomeController extends Controller
     public function index()
     {
         $featuredProducts = Product::where('status', 'active')->take(6)->get();
-        return view('home', compact('featuredProducts'));
+        $liveAuctions = Auction::all(); // Fetch all auctions without filtering
+
+        return view('home', compact('featuredProducts', 'liveAuctions'));
     }
 }

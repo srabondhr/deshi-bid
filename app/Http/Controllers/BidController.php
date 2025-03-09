@@ -4,17 +4,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Bid;
 use App\Models\Product;
+use App\Models\Auction; // Import the Auction model
 use Illuminate\Support\Facades\Auth;
 
 class BidController extends Controller {
-    public function store(Request $request) {
+    public function bid($product_id)
+    {
+        $product = Product::findOrFail($product_id);
+        return view('bids.bid', compact('product'));
+    }
+
+    public function store(Request $request)
+    {
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'bid_amount' => 'required|numeric|min:1'
         ]);
 
         $product = Product::findOrFail($request->product_id);
-        
+
         if ($request->bid_amount <= $product->current_price) {
             return back()->withErrors(['bid_amount' => 'Your bid must be higher than the current price!']);
         }
@@ -29,4 +37,5 @@ class BidController extends Controller {
 
         return back()->with('success', 'Bid placed successfully!');
     }
+    
 }
