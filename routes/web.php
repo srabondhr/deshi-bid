@@ -24,13 +24,15 @@ use App\Http\Controllers\ReviewController;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', function () {
+    return redirect()->route('home');
+})->name('home.redirect');
+
+Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
@@ -43,12 +45,8 @@ Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store
 
 Route::post('/bids', [BidController::class, 'store'])->middleware('auth')->name('bids.store');
 Route::resource('auctions', AuctionController::class)->middleware('auth');
-#bidding part
-Route::get('/auctions/create', [AuctionController::class, 'create'])->name('auctions.create');
-Route::get('/auctions/view/{id}', [AuctionController::class, 'show'])->name('auctions.index');
-#bidding part by abhi
-Route::get('/bids/{product_id}', [BidController::class, 'bid'])->name('bids.create');
-Route::post('/bids/store', [BidController::class, 'store'])->name('bids.store');
+
+Route::get('/bids/create/{auction_id}', [BidController::class, 'create'])->name('bids.create');
 
 Route::post('/buy-now/{product}', [BuyNowController::class, 'buyNow'])->middleware('auth')->name('buy_now');
 Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');

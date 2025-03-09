@@ -1,26 +1,63 @@
-<!-- resources/views/bids/bid.blade.php -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place a Bid</title>
-</head>
-<body>
-    <h1>Bid on {{ $product->name }}</h1>
-    
-    <p><strong>Current Price:</strong> ${{ $product->current_price }}</p>
+@extends('layouts.app')
 
-    <form action="{{ route('bids.store') }}" method="POST">
-        @csrf
-        <input type="hidden" name="product_id" value="{{ $product->id }}">
+@section('content')
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2>Place a Bid</h2>
+                </div>
+                <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
-        <label for="bid_amount">Your Bid Amount:</label>
-        <input type="number" name="bid_amount" min="{{ $product->current_price + 1 }}" required>
+                    <form action="{{ route('bids.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="auction_id" value="{{ $auction->id }}">
+                        <input type="hidden" name="product_id" value="{{ $auction->product->id }}">
 
-        <button type="submit">Place Bid</button>
-    </form>
+                        <div class="form-group">
+                            <label for="current_highest_bid">Current Highest Bid:</label>
+                            <input type="text" id="current_highest_bid" class="form-control" 
+                                   value="BDT {{ $auction->bids->max('bid_amount') ?? $auction->starting_price }}" readonly>
+                        </div>
 
-    <a href="{{ route('auctions.index') }}">Back to Auctions</a>
-</body>
-</html>
+                        <div class="form-group">
+                            <label for="bid_amount">Your Bid Amount:</label>
+                            <input type="text" id="bid_amount" class="form-control" 
+                                   value="BDT {{ $auction->bids->max('bid_amount') ?? $auction->starting_price }}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new_bid_amount">New Bid Amount (with increment):</label>
+                            <input type="number" id="new_bid_amount" name="bid_amount" class="form-control" 
+                                   min="{{ ($auction->bids->max('bid_amount') ?? $auction->starting_price) + $auction->bid_increment }}" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Place Bid</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{{ route('auctions.index') }}" class="btn btn-secondary">Back to Auction</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const newBidInput = document.getElementById('new_bid_amount');
+        const currentBid = parseFloat(document.getElementById('current_highest_bid').value.replace('BDT ', ''));
+        const bidIncrement = {{ $auction->bid_increment }};
+
+        newBidInput.min = (currentBid + bidIncrement).toFixed(2);
+        newBidInput.value = newBidInput.min;
+    });
+</script>
+@endsection

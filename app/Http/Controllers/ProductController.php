@@ -28,7 +28,7 @@ class ProductController extends Controller
             'description' => 'required|string',
             'category' => 'required|string|max:255',
             'starting_price' => 'required|string',
-            'status' => 'required|string|max:255',
+            'status' => 'required|in:active,sold',
         ]);
 
         $product = new Product();

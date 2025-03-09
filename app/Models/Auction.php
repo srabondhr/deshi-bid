@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Auction extends Model {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'start_time', 'end_time', 'current_price', 'bid_increment', 'winning_bid_id'];
+    protected $fillable = ['product_id', 'start_time', 'end_time', 'bid_increment'];
 
     public function product() {
         return $this->belongsTo(Product::class);
@@ -15,6 +15,6 @@ class Auction extends Model {
 
     public function bids()
     {
-        return $this->hasMany(Bid::class);
+        return $this->hasMany(Bid::class, 'auction_id');
     }
 }

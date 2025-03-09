@@ -30,4 +30,14 @@ class HomeController extends Controller
 
         return view('home', compact('featuredProducts', 'liveAuctions'));
     }
+
+    /**
+     * Show the dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function dashboard()
+    {
+        return view('dashboard');
+    }
 }

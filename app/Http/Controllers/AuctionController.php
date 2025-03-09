@@ -26,7 +26,8 @@ class AuctionController extends Controller
      */
     public function create()
     {
-        return view('auctions.create');
+        $products = Product::where('status', 'active')->get(); // Fetch only active products
+        return view('auctions.create', compact('products'));
     }
 
     /**
@@ -46,7 +47,7 @@ class AuctionController extends Controller
 
         Auction::create($request->all());
 
-        return redirect()->route('a')
+        return redirect()->route('auctions.index')
                 ->with('success', 'Auction created successfully!');
     }
 
@@ -54,7 +55,7 @@ class AuctionController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Auction  $auction
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show(Auction $auction)
     {

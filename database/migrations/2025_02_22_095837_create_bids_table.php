@@ -18,8 +18,17 @@ class CreateBidsTable extends Migration
                 $table->id();
                 $table->foreignId('auction_id')->constrained()->onDelete('cascade'); // Foreign key to auctions table
                 $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
-                $table->decimal('bid_amount', 10, 2);
+                $table->decimal('bid_amount', 10, 2); // Ensure the bid_amount column is defined
                 $table->timestamps();
+            });
+        } else {
+            Schema::table('bids', function (Blueprint $table) {
+                if (!Schema::hasColumn('bids', 'auction_id')) {
+                    $table->foreignId('auction_id')->constrained()->onDelete('cascade'); // Foreign key to auctions table
+                }
+                if (!Schema::hasColumn('bids', 'bid_amount')) {
+                    $table->decimal('bid_amount', 10, 2); // Ensure the bid_amount column is defined
+                }
             });
         }
     }

@@ -15,7 +15,6 @@ class Product extends Model
         'description',
         'category',
         'starting_price',
-      
         'images',
         'status',
     ];
@@ -34,5 +33,16 @@ class Product extends Model
     public function bids()
     {
         return $this->hasMany(Bid::class);
+    }
+
+    /**
+     * Scope a query to only include available products.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'available');
     }
 }
