@@ -40,25 +40,38 @@
 
     <!-- Live Auctions -->
     <h3>Live Auctions</h3>
-    <div class="row">
-        @foreach ($liveAuctions as $auction)
-            <div class="col-md-6 mb-4">
-                <div class="card p-3">
-                    <h4>{{ $auction->product->name }}</h4>
-                    <p>Starting Price: BDT {{ number_format($auction->starting_price, 2) }}</p>
-                    <p>Current Bid: 
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Starting Price</th>
+                <th>Current Bid</th>
+                <th>Total Bids</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($liveAuctions as $index => $auction)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $auction->product->name }}</td>
+                    <td>BDT {{ number_format($auction->starting_price, 2) }}</td>
+                    <td>
                         @if ($auction->bids->count() > 0)
                             BDT {{ number_format($auction->bids->max('bid_amount'), 2) }}
                         @else
                             No bids yet
                         @endif
-                    </p>
-                    <p>Total Bids: {{ $auction->bids->count() }}</p>
-                    <a href="{{ route('bids.create', ['auction_id' => $auction->id]) }}" class="btn btn-primary">Bid Now</a>
-                </div>
-            </div>
-        @endforeach
-    </div>
+                    </td>
+                    <td>{{ $auction->bids->count() }}</td>
+                    <td>
+                        <a href="{{ route('bids.create', ['auction_id' => $auction->id]) }}" class="btn btn-primary">Bid Now</a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endif
 @endsection
