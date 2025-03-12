@@ -29,11 +29,11 @@
                         <td>{{ $auction->product->name }}</td>
                         <td>{{ $auction->start_time }}</td>
                         <td>{{ $auction->end_time }}</td>
-                        <td>BDT {{ number_format($auction->bid_increment, 2) }}</td>
+                        <td>BDT {{ $auction->bid_increment }}</td>
                         <td>
                             <p>Current Bid: 
                                 @if ($auction->bids->isNotEmpty())
-                                    BDT {{ number_format($auction->bids->max('bid_amount'), 2) }}
+                                    BDT {{ $auction->bids->max('bid_amount') }}
                                 @else
                                     No bids yet
                                 @endif

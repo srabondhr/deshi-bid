@@ -39,7 +39,7 @@ class BidController extends Controller
         $requiredBidAmount = $currentHighestBid + $auction->bid_increment;
 
         if ($request->bid_amount < $requiredBidAmount) {
-            return back()->withErrors(['bid_amount' => 'Your bid must be at least BDT ' . number_format($requiredBidAmount, 2)]);
+            return back()->withErrors(['bid_amount' => 'Your bid must be at least BDT ' . $requiredBidAmount]);
         }
 
         Bid::create([

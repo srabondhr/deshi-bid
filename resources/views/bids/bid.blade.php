@@ -56,7 +56,7 @@
         const currentBid = parseFloat(document.getElementById('current_highest_bid').value.replace('BDT ', ''));
         const bidIncrement = {{ $auction->bid_increment }};
 
-        newBidInput.min = (currentBid + bidIncrement).toFixed(2);
+        newBidInput.min = (currentBid + bidIncrement);
         newBidInput.value = newBidInput.min;
     });
 </script>

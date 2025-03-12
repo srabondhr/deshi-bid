@@ -30,7 +30,7 @@
                     <img src="{{ asset('storage/' . $product->images) }}" alt="{{ $product->name }}" class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title">{{ $product->name }}</h5>
-                        <p class="card-text">BDT {{ number_format($product->starting_price, 2) }}</p>
+                        <p class="card-text">BDT {{ $product->starting_price }}</p>
                         <a href="{{ route('bids.create', ['auction_id' => $product->id]) }}" class="btn btn-info">Bid Now</a>
                     </div>
                 </div>
@@ -48,6 +48,7 @@
                 <th>Starting Price</th>
                 <th>Current Bid</th>
                 <th>Total Bids</th>
+                <th>Total Price</th> <!-- New column -->
                 <th>Action</th>
             </tr>
         </thead>
@@ -56,15 +57,22 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $auction->product->name }}</td>
-                    <td>BDT {{ number_format($auction->starting_price, 2) }}</td>
+                    <td>BDT {{ $auction->product->starting_price }}</td> 
                     <td>
                         @if ($auction->bids->count() > 0)
-                            BDT {{ number_format($auction->bids->max('bid_amount'), 2) }}
+                            BDT {{ $auction->bids->max('bid_amount') }}
                         @else
                             No bids yet
                         @endif
                     </td>
                     <td>{{ $auction->bids->count() }}</td>
+                    <td>
+                        @if ($auction->bids->count() > 0)
+                            BDT {{ $auction->product->starting_price + $auction->bids->max('bid_amount') }}
+                        @else
+                            BDT {{ $auction->product->starting_price }}
+                        @endif
+                    </td>
                     <td>
                         <a href="{{ route('bids.create', ['auction_id' => $auction->id]) }}" class="btn btn-primary">Bid Now</a>
                     </td>
