@@ -53,8 +53,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($liveAuctions as $index => $auction)
-                <tr>
+            @php
+                $sortedAuctions = $liveAuctions->sortByDesc(function($auction) {
+                    return $auction->bids->max('updated_at');
+                });
+            @endphp
+
+            @foreach ($sortedAuctions as $index => $auction)
+                @php
+                    $isRecentlyUpdated = $auction->bids->max('updated_at') && $auction->bids->max('updated_at')->diffInMinutes(now()) < 10; // Highlight if updated within the last 10 minutes
+                @endphp
+                <tr class="{{ $isRecentlyUpdated ? 'table-success' : '' }}">
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $auction->product->name }}</td>
                     <td>BDT {{ $auction->product->starting_price }}</td> 

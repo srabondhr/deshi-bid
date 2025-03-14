@@ -19,17 +19,33 @@
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Bid Increment</th>
+                    <th>Total Price</th> <!-- New column -->
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($auctions as $auction)
-                    <tr>
+                @php
+                    $sortedAuctions = $auctions->sortByDesc(function($auction) {
+                        return $auction->bids->max('updated_at');
+                    });
+                @endphp
+                @foreach($sortedAuctions as $auction)
+                    @php
+                        $isRecentlyUpdated = $auction->bids->max('updated_at') && $auction->bids->max('updated_at')->diffInMinutes(now()) < 10;
+                    @endphp
+                    <tr class="{{ $isRecentlyUpdated ? 'table-success' : '' }}">
                         <td>{{ $auction->id }}</td>
                         <td>{{ $auction->product->name }}</td>
                         <td>{{ $auction->start_time }}</td>
                         <td>{{ $auction->end_time }}</td>
                         <td>BDT {{ $auction->bid_increment }}</td>
+                        <td>
+                            @if ($auction->bids->isNotEmpty())
+                                BDT {{ $auction->product->starting_price + $auction->bids->max('bid_amount') }}
+                            @else
+                                BDT {{ $auction->product->starting_price }}
+                            @endif
+                        </td>
                         <td>
                             <p>Current Bid: 
                                 @if ($auction->bids->isNotEmpty())

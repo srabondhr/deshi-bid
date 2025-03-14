@@ -14,10 +14,11 @@ class AuctionController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-    {
-        $auctions = Auction::all();
-        return view('auctions.index', compact('auctions'));
-    }
+{
+    $auctions = Auction::with(['product', 'bids'])->orderBy('updated_at', 'desc')->get();
+    return view('auctions.index', compact('auctions'));
+}
+
 
     /**
      * Show the form for creating a new auction.

@@ -6,6 +6,8 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
