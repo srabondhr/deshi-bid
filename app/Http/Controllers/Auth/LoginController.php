@@ -8,45 +8,34 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
 
+    public function redirectTo()
+    {
+        if (auth()->check()) {
+            return match (auth()->user()->role) {
+                'admin' => '/admin/dashboard',
+                'bidder' => '/bidder/dashboard',
+                'seller' => '/seller/dashboard',
+                default => '/',
+            };
+        }
+        return '/';
+    }
+
     public function logout(Request $request)
     {
-        $this->guard()->logout();
+        auth()->logout();  // Logout user
 
-        $request->session()->invalidate();
+        $request->session()->invalidate();  // Invalidate session
+        $request->session()->regenerateToken();  // Regenerate CSRF token
 
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+        return redirect('/');  // Redirect to homepage
     }
 }

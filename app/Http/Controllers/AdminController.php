@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AdminSetting;
 use App\Models\User;
 use App\Notifications\AccountBanNotification;
@@ -28,5 +29,19 @@ class AdminController extends Controller
         $user->notify(new AccountBanNotification());
 
         return response()->json(['message' => 'User banned']);
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::guard('admin')->attempt($credentials)) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials']);
     }
 }

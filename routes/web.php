@@ -12,51 +12,57 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\BidderController;
+use App\Http\Controllers\SellerController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+// Home Route
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', fn() => redirect()->route('home'))->name('home.redirect');
 
-Auth::routes();
+// Authentication Routes with Email Verification
+Auth::routes(['verify' => true]);
 
-Route::get('/home', function () {
-    return redirect()->route('home');
-})->name('home.redirect');
+// Dashboard Route (Accessible only to verified users)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+});
 
-Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+// Product & Review Routes (Requires Authentication)
+Route::middleware(['auth'])->group(function () {
+    Route::resource('products', ProductController::class);
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+});
 
-Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('login', [AuthController::class, 'login']);
-Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [AuthController::class, 'register']);
-Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+// Bidding & Auction Routes
+Route::middleware(['auth'])->group(function () {
+    Route::resource('auctions', AuctionController::class);
+    Route::post('/bids', [BidController::class, 'store'])->name('bids.store');
+    Route::get('/bids/create/{auction_id}', [BidController::class, 'create'])->name('bids.create');
+    Route::post('/buy-now/{product}', [BuyNowController::class, 'buyNow'])->name('buy_now');
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+});
 
-Route::resource('products', ProductController::class);
-Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-
-Route::post('/bids', [BidController::class, 'store'])->middleware('auth')->name('bids.store');
-Route::resource('auctions', AuctionController::class)->middleware('auth');
-
-Route::get('/bids/create/{auction_id}', [BidController::class, 'create'])->name('bids.create');
-
-Route::post('/buy-now/{product}', [BuyNowController::class, 'buyNow'])->middleware('auth')->name('buy_now');
-Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
-Route::put('/admin/settings', [AdminController::class, 'updateSettings'])->middleware('auth');
-Route::delete('/admin/ban/{id}', [AdminController::class, 'banUser'])->middleware('auth');
-
-Route::middleware('auth')->group(function () {
+// Profile Routes (Authenticated Users Only)
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
+    Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
 });
 
-Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
+// Admin Routes
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::put('/settings', [AdminController::class, 'updateSettings']);
+    Route::delete('/ban/{id}', [AdminController::class, 'banUser']);
+});
+
+// Bidder Routes
+Route::middleware(['auth', 'role:bidder'])->prefix('bidder')->group(function () {
+    Route::get('/dashboard', [BidderController::class, 'dashboard'])->name('bidder.dashboard');
+});
+
+// Seller Routes
+Route::middleware(['auth', 'role:seller'])->prefix('seller')->group(function () {
+    Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('seller.dashboard');
+});
