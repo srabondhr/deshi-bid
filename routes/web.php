@@ -66,3 +66,7 @@ Route::middleware(['auth', 'role:bidder'])->prefix('bidder')->group(function () 
 Route::middleware(['auth', 'role:seller'])->prefix('seller')->group(function () {
     Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('seller.dashboard');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

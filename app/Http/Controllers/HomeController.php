@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Models\Auction; // Make sure to import your Auction model
 
 class HomeController extends Controller
 {
@@ -19,25 +17,12 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application home page with featured products.
+     * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        $featuredProducts = Product::where('status', 'active')->take(6)->get();
-        $liveAuctions = Auction::all(); // Fetch all auctions without filtering
-
-        return view('home', compact('featuredProducts', 'liveAuctions'));
-    }
-
-    /**
-     * Show the dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function dashboard()
-    {
-        return view('dashboard');
+        return view('home');
     }
 }

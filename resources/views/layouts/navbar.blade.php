@@ -1,75 +1,108 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+<!-- ========================================== -->
+<!-- FILE 2: resources/views/layouts/navbar.blade.php -->
+<!-- ========================================== -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="{{ route('home') }}">
-            <img src="{{ asset('images/logo.png') }}" alt="Deshi Bid Logo" class="img-fluid" style="max-height: 70px;">
+            <i class="fas fa-gavel"></i> Deshi Bid
         </a>
-
-        <!-- Single Toggler Button for Small Screens -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navigation Links -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                @if (Route::currentRouteName() == 'login' || Route::currentRouteName() == 'register') 
-                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                    @if (Route::has('register'))
-                        <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-                    @endif
-                @else
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Products</a></li>
-                    @auth
-                        <li class="nav-item"><a class="nav-link" href="{{ route('profile.view') }}">Profile</a></li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}"
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
-                        </li>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-                    @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                        @if (Route::has('register'))
-                            <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-                        @endif
-                    @endauth
-                @endif
-            </ul>
-        </div>
-    </div>
-
-    <!-- Mobile Navigation Links Inside Toggler -->
-    <div class="collapse d-md-none" id="navbarNav">
-        <div class="bg-dark p-3">
-            @if (Route::currentRouteName() == 'login' || Route::currentRouteName() == 'register') 
-                <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
-                @if (Route::has('register'))
-                    <a class="nav-link text-white" href="{{ route('register') }}">Register</a>
-                @endif
-            @else
-                <a class="nav-link text-white" href="{{ route('home') }}">Home</a>
-                <a class="nav-link text-white" href="{{ route('products.index') }}">Products</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
                 @auth
-                    <a class="nav-link text-white" href="{{ route('profile.view') }}">Profile</a>
-                    <a class="nav-link text-white" href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
-                        Logout
-                    </a>
-                    <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                @else
-                    <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
-                    @if (Route::has('register'))
-                        <a class="nav-link text-white" href="{{ route('register') }}">Register</a>
-                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('auctions.index') }}">
+                            <i class="fas fa-gavel"></i> Auctions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.index') }}">
+                            <i class="fas fa-box"></i> Products
+                        </a>
+                    </li>
                 @endauth
-            @endif
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                @guest
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                    </li>
+                @else
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('profile.view') }}">
+                                    <i class="fas fa-user"></i> My Profile
+                                </a>
+                            </li>
+                            
+                            @if(Auth::user()->isSeller())
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('seller.products') }}">
+                                        <i class="fas fa-box"></i> My Products
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('seller.auctions') }}">
+                                        <i class="fas fa-gavel"></i> My Auctions
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if(Auth::user()->isBidder())
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('bids.my-bids') }}">
+                                        <i class="fas fa-hand-holding-usd"></i> My Bids
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('bidder.won-auctions') }}">
+                                        <i class="fas fa-trophy"></i> Won Auctions
+                                    </a>
+                                </li>
+                            @endif
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                @endguest
+            </ul>
         </div>
     </div>
 </nav>
